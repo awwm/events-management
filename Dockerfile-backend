@@ -1,0 +1,25 @@
+# Use the official PHP image with Apache included
+FROM php:8.3.4-apache
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install additional PHP extensions
+RUN docker-php-ext-install pdo pdo_pgsql
+
+# Set the working directory in the container
+WORKDIR /var/www/html
+
+# Copy backend files
+COPY ./backend/ ./
+
+# Copy PHP configuration file
+COPY ./backend/php.ini /usr/local/etc/php/
+
+# Expose port 80 to the Docker host, so external connections can access the container
+EXPOSE 80
+
+# By default, start Apache in the foreground
+CMD ["apache2-foreground"]
