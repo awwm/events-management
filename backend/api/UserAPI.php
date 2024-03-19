@@ -1,8 +1,8 @@
 <?php
 
-require_once('../classes/User.php');
-require_once('../config/database.php');
-require_once('../vendor/autoload.php');
+require_once('./classes/User.php');
+require_once('./config/database.php');
+require_once('./vendor/autoload.php');
 
 use Firebase\JWT\JWT;
 
@@ -25,6 +25,72 @@ class UserAPI {
             return $decoded->userId;
         } catch (Exception $e) {
             return null;
+        }
+    }
+
+    // Method to handle user registration
+    public static function registerAdmin() {
+        $data = json_decode(file_get_contents("php://input"));
+
+        if (!empty($data->email) && !empty($data->password) && !empty($data->username) && isset($data->role)) {
+            // Check if the user already exists
+            $db = new Database();
+            $pdo = $db->connect();
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ?');
+            $stmt->execute([$data->email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user) {
+                // User already exists
+                http_response_code(400);
+                echo json_encode(array("message" => "User with this email already exists"));
+            } else {
+                // Create the user
+                $hashedPassword = password_hash($data->password, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare('INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)');
+                $stmt->execute([$data->username, $data->email, $hashedPassword, $data->role]);
+
+                // Return success message
+                http_response_code(201);
+                echo json_encode(array("message" => "User registered successfully"));
+            }
+        } else {
+            // Missing email or password
+            http_response_code(400);
+            echo json_encode(array("message" => "Email and password are required"));
+        }
+    }
+
+    // Method to handle user registration
+    public static function register() {
+        $data = json_decode(file_get_contents("php://input"));
+
+        if (!empty($data->email) && !empty($data->password) && !empty($data->username)) {
+            // Check if the user already exists
+            $db = new Database();
+            $pdo = $db->connect();
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ?');
+            $stmt->execute([$data->email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user) {
+                // User already exists
+                http_response_code(400);
+                echo json_encode(array("message" => "User with this email already exists"));
+            } else {
+                // Create the user
+                $hashedPassword = password_hash($data->password, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?)');
+                $stmt->execute([$data->username, $data->email, $hashedPassword]);
+
+                // Return success message
+                http_response_code(201);
+                echo json_encode(array("message" => "User registered successfully"));
+            }
+        } else {
+            // Missing email or password
+            http_response_code(400);
+            echo json_encode(array("message" => "Email and password are required"));
         }
     }
 

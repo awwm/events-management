@@ -49,8 +49,19 @@ switch ($api) {
         }
         break;
     case 'UserAPI':
+        // Determine action based on the request body
+        $data = json_decode(file_get_contents("php://input"));
         if ($method == 'POST') {
-            UserAPI::login();
+            if (isset($data->register)) {
+                // Regular user registration
+                UserAPI::register();
+            } elseif (isset($data->registerAdmin)) {
+                // Admin user registration
+                UserAPI::registerAdmin();
+            } else {
+                // User login
+                UserAPI::login();
+            }
         }
         break;
     default:
