@@ -1,14 +1,14 @@
 version: '3'
 
 services:
-  # frontend:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile-frontend
-  #   ports:
-  #     - "8070:8070" # Map port 8080 on the host to port 80 on the frontend container
-  #   volumes:
-  #     - ./frontend:/app/frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile-frontend
+    ports:
+      - "8070:8070" # Map port 8080 on the host to port 80 on the frontend container
+    volumes:
+      - ./frontend:/app/frontend
 
   backend:
     build:
