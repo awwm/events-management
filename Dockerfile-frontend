@@ -1,5 +1,5 @@
 # Use a base image with Node.js pre-installed
-FROM node:latest AS builder
+FROM node:latest
 
 # install simple http server for serving static content
 # RUN npm install -g http-server
@@ -20,7 +20,7 @@ COPY frontend/ ./
 RUN npm run build
 
 # Expose port 80 to the Docker host, so external connections can access the container
-EXPOSE 8070
+EXPOSE 8080
 
 # Command to run the Vue.js application
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "serve"]

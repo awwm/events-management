@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile-frontend
     ports:
-      - "8070:8070" # Map port 8080 on the host to port 80 on the frontend container
+      - "8080:8080" # Map port 8080 on the host to port 8080 on the frontend container
     volumes:
       - ./frontend:/app/frontend
 
