@@ -13,6 +13,22 @@ require_once('api/CategoryAPI.php');
 require_once('api/EventAPI.php');
 require_once('api/UserAPI.php');
 
+// // Include necessary files
+// require_once('config/database.php');
+
+// // Create an instance of the Database class
+// $database = new Database();
+
+// // Attempt to connect to the database
+// $pdo = $database->initSchema();
+
+// // Check if the connection was successful
+// if ($pdo) {
+//     echo "Database connection successful";
+// } else {
+//     echo "Database connection failed";
+// }
+
 // Define the base API path
 $basePath = '/api/';
 

@@ -42,6 +42,16 @@ class Database {
 
         // Create tables if they don't exist
         $pdo->exec("
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                username VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                role INT NOT NULL DEFAULT 2
+            )
+        ");
+
+        $pdo->exec("
             CREATE TABLE IF NOT EXISTS cities (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL
@@ -68,16 +78,6 @@ class Database {
                 user_id INT NOT NULL,
                 FOREIGN KEY (city_id) REFERENCES cities(id) ON DELETE CASCADE,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-            )
-        ");
-
-        $pdo->exec("
-            CREATE TABLE IF NOT EXISTS users (
-                id SERIAL PRIMARY KEY,
-                username VARCHAR(255) NOT NULL,
-                email VARCHAR(255) NOT NULL,
-                password VARCHAR(255) NOT NULL,
-                role INT NOT NULL DEFAULT 2
             )
         ");
     }
