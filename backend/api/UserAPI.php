@@ -15,7 +15,8 @@ class UserAPI {
             "userId" => $userId,
             "exp" => time() + (60 * 60) // Token expiration time (1 hour)
         );
-        return JWT::encode($token, $_ENV['JWT_SECRET']);
+        $algorithm = 'HS256';
+        return JWT::encode($token, $_ENV['JWT_SECRET'], $algorithm);
     }
 
     // Method to validate a JWT token
@@ -50,9 +51,13 @@ class UserAPI {
                 $stmt = $pdo->prepare('INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)');
                 $stmt->execute([$data->username, $data->email, $hashedPassword, $data->role]);
 
+                // Generate JWT token
+                $userId = $pdo->lastInsertId(); // Get the ID of the newly inserted user
+                $token = self::generateToken($userId);
+
                 // Return success message
                 http_response_code(201);
-                echo json_encode(array("message" => "User registered successfully"));
+                echo json_encode(array("message" => "User registered successfully", "token" => $token));
             }
         } else {
             // Missing email or password
@@ -83,9 +88,13 @@ class UserAPI {
                 $stmt = $pdo->prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?)');
                 $stmt->execute([$data->username, $data->email, $hashedPassword]);
 
+                // Generate JWT token
+                $userId = $pdo->lastInsertId(); // Get the ID of the newly inserted user
+                $token = self::generateToken($userId);
+
                 // Return success message
                 http_response_code(201);
-                echo json_encode(array("message" => "User registered successfully"));
+                echo json_encode(array("message" => "User registered successfully", "token" => $token));
             }
         } else {
             // Missing email or password

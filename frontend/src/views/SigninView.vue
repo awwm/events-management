@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { BASE_URL } from '../../constants.js'; // Import the BASE_URL constant
+
 export default {
     data() {
         return {
@@ -25,9 +27,33 @@ export default {
         };
     },
     methods: {
-        signinUser() {
-            // Implement signin logic here
-            // Send signin data to backend API
+        async signinUser() {
+            try {
+                const response = await fetch(BASE_URL + '/api/UserAPI/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: this.email,
+                        password: this.password
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // Handle successful sign-in
+                    // For example, store JWT token in local storage
+                    localStorage.setItem('token', data.token);
+                    // Redirect or navigate to the dashboard or another page
+                    this.$router.push('/about');
+                } else {
+                    // Handle sign-in error
+                    console.error('Sign-in failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
     }
 };

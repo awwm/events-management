@@ -1,6 +1,9 @@
 # Use the official PHP image with Apache included
 FROM php:8.3.4-apache
 
+# Enable mod_rewrite
+RUN a2enmod rewrite
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     libpq-dev \

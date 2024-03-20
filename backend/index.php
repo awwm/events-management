@@ -13,6 +13,13 @@ require_once('api/CategoryAPI.php');
 require_once('api/EventAPI.php');
 require_once('api/UserAPI.php');
 
+// Enable CORS (Cross-Origin Resource Sharing)
+// header('Access-Control-Allow-Origin: *'); // Allow requests from any origin
+header("Access-Control-Allow-Origin: http://localhost:8082");
+header("Access-Control-Allow-Credentials: true");
+header('Access-Control-Allow-Methods: GET, POST'); // Allow GET and POST requests
+header('Access-Control-Allow-Headers: Content-Type, Authorization'); // Allow Content-Type and Authorization headers
+
 // // Include necessary files
 // require_once('config/database.php');
 
