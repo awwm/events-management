@@ -6,27 +6,29 @@
     </router-link>
     <!-- Navigation buttons -->
     <v-spacer></v-spacer>
-    <v-btn v-if="!isLoggedIn" @click="navigateTo('/register')">Register</v-btn>
-    <v-btn v-if="!isLoggedIn" @click="navigateTo('/signin')">SignIn</v-btn>
-    <v-btn v-if="isLoggedIn" @click="logout">Logout</v-btn>
+    <v-btn v-if="!isAuthenticated" @click="navigateTo('/register')">Register</v-btn>
+    <v-btn v-if="!isAuthenticated" @click="navigateTo('/signin')">SignIn</v-btn>
+    <v-btn v-if="isAuthenticated" @click="navigateTo('/dashboard')">Dashboard</v-btn>
+    <v-btn v-if="isAuthenticated" @click="logout">Logout</v-btn>
   </v-app-bar>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 export default {
-  props: {
-    isLoggedIn: {
-      type: Boolean,
-      default: false
-    }
-  },
   methods: {
+    ...mapActions(['logoutUser']),
     navigateTo(route) {
       this.$router.push(route);
     },
-    logout() {
-      // Implement logout logic here
+    async logout() {
+      await this.logoutUser();
+      // Emit an event to notify the parent component
+      this.$emit('userLoggedOut');
     }
+  },
+  computed: {
+    ...mapState(['isAuthenticated'])
   }
 };
 </script>

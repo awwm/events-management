@@ -4,7 +4,7 @@
             <v-col cols="12" sm="8" md="6">
                 <h2>Sign In</h2>
                 <!-- Signin form -->
-                <v-form @submit.prevent="signinUser">
+                <v-form @submit.prevent="signInUser">
                     <!-- Form fields -->
                     <v-text-field v-model="email" label="Email" type="email" required></v-text-field>
                     <v-text-field v-model="password" label="Password" type="password" required></v-text-field>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { BASE_URL } from '../../constants.js'; // Import the BASE_URL constant
+import { mapActions } from 'vuex'; // Import mapActions from Vuex
 
 export default {
     data() {
@@ -27,35 +27,32 @@ export default {
         };
     },
     methods: {
-        async signinUser() {
+        ...mapActions(['signinUser', 'setAuthenticated']), // Map the signInUser action from Vuex
+        async signInUser() {
             try {
-                const response = await fetch(BASE_URL + '/api/UserAPI/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: this.email,
-                        password: this.password
-                    })
+                const response = await this.$store.dispatch('signinUser', {
+                    email: this.email,
+                    password: this.password
                 });
-
+                // Optionally handle successful sign-in
                 if (response.ok) {
+                    // Registration successful
+                    this.registrationSuccess = true;
                     const data = await response.json();
-                    // Handle successful sign-in
-                    // For example, store JWT token in local storage
                     localStorage.setItem('token', data.token);
-                    // Redirect or navigate to the dashboard or another page
-                    this.$router.push('/about');
+                    // Set isAuthenticated to true in Vuex store
+                    this.setAuthenticated(true);
+                    this.$router.push('/dashboard');
                 } else {
-                    // Handle sign-in error
-                    console.error('Sign-in failed');
+                    // Registration failed
+                    console.error('Login failed:', response.statusText);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error signing in:', error);
+                // Optionally handle sign-in errors
             }
         }
-    }
+    },
 };
 </script>
 

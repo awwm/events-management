@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import SigninView from '../views/SigninView.vue'
+import DashboardView from '../views/DashboardView.vue'
 
 const routes = [
   {
@@ -20,6 +21,12 @@ const routes = [
     component: SigninView
   },
   {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: DashboardView,
+    meta: { requiresAuth: true } // Add this meta field to require authentication
+  },
+  {
     path: '/about',
     name: 'about',
     // route level code-splitting
@@ -32,6 +39,19 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
-})
+});
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('token');
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!isAuthenticated) {
+      next('/signin'); // Redirect to signin page if not authenticated
+    } else {
+      next(); // Proceed to the route if authenticated
+    }
+  } else {
+    next(); // Allow access to routes that don't require authentication
+  }
+});
 
 export default router

@@ -1,8 +1,9 @@
 <template>
   <v-app class="pa-4">
-    <AppHeader :isLoggedIn="isLoggedIn" />
+    <AppHeader :isLoggedIn="isLoggedIn" @userLoggedIn="updateIsLoggedIn" />
+
     <v-main>
-      <router-view/>
+      <router-view :isLoggedIn="isLoggedIn"></router-view>
     </v-main>
     <AppFooter />
   </v-app>
@@ -22,6 +23,12 @@ export default {
     return {
       isLoggedIn: false // Placeholder for user authentication status
     };
+  },
+  methods: {
+    updateIsLoggedIn(value) {
+      console.log('User logged in status:', value);
+      this.isLoggedIn = value;
+    },
   }
 };
 </script>
