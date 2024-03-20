@@ -25,22 +25,22 @@ class EventAPI {
     }
 
     // Method to add an event
-    public static function addEvent($userId, $name, $cityId, $categoryIds, $featuredImage, $shortDescription, $longDescription) {
+    public static function addEvent($userId, $name, $city, $categoryIds, $featuredImage, $shortDescription, $longDescription) {
         $db = new Database();
         $pdo = $db->connect();
-        $stmt = $pdo->prepare('INSERT INTO events (user_id, name, city_id, category_ids, featured_image, short_description, long_description) VALUES (?, ?, ?, ?, ?, ?, ?)');
-        $stmt->execute([$userId, $name, $cityId, $categoryIds, $featuredImage, $shortDescription, $longDescription]);
+        $stmt = $pdo->prepare('INSERT INTO events (user_id, name, city, category_ids, featured_image, short_description, long_description) VALUES (?, ?, ?, ?, ?, ?, ?)');
+        $stmt->execute([$userId, $name, $city, $categoryIds, $featuredImage, $shortDescription, $longDescription]);
         return $pdo->lastInsertId();
     }
 
     // Method to edit an event
-    public static function editEvent($userId, $id, $name, $cityId, $categoryIds, $featuredImage, $shortDescription, $longDescription) {
+    public static function editEvent($userId, $id, $name, $city, $categoryIds, $featuredImage, $shortDescription, $longDescription) {
         // Check if the user is authorized to edit the event
         if (UserAPI::isAdmin($userId)) {
             $db = new Database();
             $pdo = $db->connect();
-            $stmt = $pdo->prepare('UPDATE events SET name = ?, city_id = ?, category_ids = ?, featured_image = ?, short_description = ?, long_description = ? WHERE id = ?');
-            $stmt->execute([$name, $cityId, $categoryIds, $featuredImage, $shortDescription, $longDescription, $id]);
+            $stmt = $pdo->prepare('UPDATE events SET name = ?, city = ?, category_ids = ?, featured_image = ?, short_description = ?, long_description = ? WHERE id = ?');
+            $stmt->execute([$name, $city, $categoryIds, $featuredImage, $shortDescription, $longDescription, $id]);
             return true;
         } else {
             // Check if the event belongs to the user
@@ -52,8 +52,8 @@ class EventAPI {
             
             if ($event && $event['user_id'] == $userId) {
                 // User is authorized to edit the event
-                $stmt = $pdo->prepare('UPDATE events SET name = ?, city_id = ?, category_ids = ?, featured_image = ?, short_description = ?, long_description = ? WHERE id = ?');
-                $stmt->execute([$name, $cityId, $categoryIds, $featuredImage, $shortDescription, $longDescription, $id]);
+                $stmt = $pdo->prepare('UPDATE events SET name = ?, city = ?, category_ids = ?, featured_image = ?, short_description = ?, long_description = ? WHERE id = ?');
+                $stmt->execute([$name, $city, $categoryIds, $featuredImage, $shortDescription, $longDescription, $id]);
                 return true;
             } else {
                 // User is not authorized to edit the event

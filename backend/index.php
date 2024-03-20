@@ -37,7 +37,7 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 // // Check if the connection was successful
 // if ($pdo) {
-//     echo "Database connection successful";
+//     echo "Database tables created";
 // } else {
 //     echo "Database connection failed";
 // }
@@ -79,7 +79,16 @@ switch ($api) {
                 EventAPI::listEvents();
             }
         } elseif ($method == 'POST') {
-            EventAPI::addEvent();
+            // Pass the required arguments to the addEvent method
+            $userId = $_POST['userId'];
+            $name = $_POST['title'];
+            $city = $_POST['city'];
+            $categoryIds = $_POST['category'];
+            $featuredImage = Null;
+            $shortDescription = $_POST['shortDescription'];
+            $longDescription = $_POST['longDescription'];
+
+            EventAPI::addEvent($userId, $name, $city, $categoryIds, $featuredImage, $shortDescription, $longDescription);
         }
         break;
     case 'UserAPI':

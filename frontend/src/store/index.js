@@ -6,6 +6,13 @@ export default createStore({
     events: [],
     isLoggedIn: false,
     isAuthenticated: false,
+    formData: {
+      title: '',
+      city: '',
+      category: '',
+      shortDescription: '',
+      longDescription: '',
+    },
   },
   mutations: {
     SET_AUTHENTICATED(state, isAuthenticated) {
@@ -13,6 +20,18 @@ export default createStore({
     },
     setEvents(state, events) {
       state.events = events;
+    },
+    setFormData(state, payload) {
+      state.formData = { ...payload };
+    },
+    resetFormData(state) {
+      state.formData = {
+        title: '',
+        city: '',
+        category: '',
+        shortDescription: '',
+        longDescription: '',
+      };
     },
   },
 
@@ -24,12 +43,12 @@ export default createStore({
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             username: regData.username,
             email: regData.email,
             password: regData.password,
             register: regData.register
-           }),
+          }),
         });
         return response;
       } catch (error) {
@@ -73,6 +92,30 @@ export default createStore({
         }
       } catch (error) {
         console.error('Error fetching user events:', error);
+      }
+    },
+    async submitForm({ commit }, formData) {
+      try {
+        // Post form data to backend API
+        let response = await fetch(BASE_URL + 'api/EventAPI', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+    
+        if (!response.ok) {
+          throw new Error('Failed to post form data');
+        }
+    
+        // Handle successful form submission
+        console.log('Form submitted successfully');
+        // Reset form data
+        commit('resetFormData');
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        throw error; // Re-throw the error for further handling if needed
       }
     },
     setAuthenticated({ commit }, isAuthenticated) {

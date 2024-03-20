@@ -52,13 +52,6 @@ class Database {
         ");
 
         $pdo->exec("
-            CREATE TABLE IF NOT EXISTS cities (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL
-            )
-        ");
-
-        $pdo->exec("
             CREATE TABLE IF NOT EXISTS categories (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
@@ -70,13 +63,12 @@ class Database {
             CREATE TABLE IF NOT EXISTS events (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
-                city_id INT NOT NULL,
+                city VARCHAR(255) NOT NULL,
                 category_ids INT[] NOT NULL,
                 featured_image VARCHAR(255) DEFAULT NULL,
                 short_description TEXT,
                 long_description TEXT,
                 user_id INT NOT NULL,
-                FOREIGN KEY (city_id) REFERENCES cities(id) ON DELETE CASCADE,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )
         ");
