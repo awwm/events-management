@@ -21,6 +21,9 @@ export default createStore({
     setEvents(state, events) {
       state.events = events;
     },
+    SET_USER_ID(state, userId) {
+      state.userId = userId;
+    },
     setFormData(state, payload) {
       state.formData = { ...payload };
     },
@@ -104,11 +107,11 @@ export default createStore({
           },
           body: JSON.stringify(formData),
         });
-    
+
         if (!response.ok) {
           throw new Error('Failed to post form data');
         }
-    
+
         // Handle successful form submission
         console.log('Form submitted successfully');
         // Reset form data

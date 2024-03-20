@@ -9,7 +9,7 @@
                     <v-text-field v-model="localFormData.city" label="City"></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
-                    <v-text-field v-model="localFormData.category" label="Category"></v-text-field>
+                    <v-text-field v-model.number="localFormData.category" label="Category" type="number"></v-text-field>
                 </v-col>
                 <v-col cols="12">
                     <v-textarea v-model="localFormData.shortDescription" label="Short Description"></v-textarea>

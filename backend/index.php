@@ -79,16 +79,18 @@ switch ($api) {
                 EventAPI::listEvents();
             }
         } elseif ($method == 'POST') {
+            $json = file_get_contents('php://input');
+            $data = json_decode($json, true);
             // Pass the required arguments to the addEvent method
-            $userId = $_POST['userId'];
-            $name = $_POST['title'];
-            $city = $_POST['city'];
-            $categoryIds = $_POST['category'];
-            $featuredImage = Null;
-            $shortDescription = $_POST['shortDescription'];
-            $longDescription = $_POST['longDescription'];
+            $userId = $data['userId'];
+            $name = $data['title'];
+            $city = $data['city'];
+            $category = $data['category'];
+            $shortDescription = $data['shortDescription'];
+            $longDescription = $data['longDescription'];
+            $featuredImage = null;
 
-            EventAPI::addEvent($userId, $name, $city, $categoryIds, $featuredImage, $shortDescription, $longDescription);
+            EventAPI::addEvent($userId, $name, $city, $category, $featuredImage, $shortDescription, $longDescription);
         }
         break;
     case 'UserAPI':

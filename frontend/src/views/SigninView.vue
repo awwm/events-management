@@ -46,6 +46,8 @@ export default {
                     const data = await response.json();
                     localStorage.setItem('token', data.token);
                     const userId = data.userId; // Extract user ID from the response
+                    // Commit userID to the Vuex store
+                    this.$store.commit('SET_USER_ID', userId);
                     // Set isAuthenticated to true in Vuex store
                     this.setAuthenticated(true);
 

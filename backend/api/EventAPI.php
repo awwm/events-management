@@ -25,11 +25,11 @@ class EventAPI {
     }
 
     // Method to add an event
-    public static function addEvent($userId, $name, $city, $categoryIds, $featuredImage, $shortDescription, $longDescription) {
+    public static function addEvent($userId, $name, $city, $category, $featuredImage, $shortDescription, $longDescription) {
         $db = new Database();
         $pdo = $db->connect();
-        $stmt = $pdo->prepare('INSERT INTO events (user_id, name, city, category_ids, featured_image, short_description, long_description) VALUES (?, ?, ?, ?, ?, ?, ?)');
-        $stmt->execute([$userId, $name, $city, $categoryIds, $featuredImage, $shortDescription, $longDescription]);
+        $stmt = $pdo->prepare('INSERT INTO events (user_id, name, city, category_ids, featured_image, short_description, long_description) VALUES (?, ?, ?, ARRAY[CAST(? AS INTEGER)], ?, ?, ?)');
+        $stmt->execute([$userId, $name, $city, $category, $featuredImage, $shortDescription, $longDescription]);
         return $pdo->lastInsertId();
     }
 
