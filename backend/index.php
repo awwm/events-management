@@ -7,6 +7,9 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+// Get allowed IPs from .env file
+$allowedIPs = $_ENV['ALLOWED_IPS'];
+
 // Include necessary files
 require_once('api/CityAPI.php');
 require_once('api/CategoryAPI.php');
@@ -14,11 +17,17 @@ require_once('api/EventAPI.php');
 require_once('api/UserAPI.php');
 
 // Enable CORS (Cross-Origin Resource Sharing)
-// header('Access-Control-Allow-Origin: *'); // Allow requests from any origin
-header("Access-Control-Allow-Origin: http://localhost:8082");
-header("Access-Control-Allow-Credentials: true");
-header('Access-Control-Allow-Methods: GET, POST'); // Allow GET and POST requests
-header('Access-Control-Allow-Headers: Content-Type, Authorization'); // Allow Content-Type and Authorization headers
+// Set Access-Control-Allow-Origin header
+if ($allowedIPs) {
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Credentials: true");
+    header('Access-Control-Allow-Methods: GET, POST'); // Allow GET and POST requests
+    header('Access-Control-Allow-Headers: Content-Type, Authorization'); // Allow Content-Type and Authorization headers
+} else {
+    // Fallback to single origin (e.g., localhost)
+    header("HTTP/1.1 403 Forbidden");
+    exit;
+}
 
 // // Include necessary files
 // require_once('config/database.php');
@@ -66,7 +75,11 @@ switch ($api) {
         break;
     case 'EventAPI':
         if ($method == 'GET') {
-            EventAPI::listEvents();
+            if (isset($_GET['userId'])) {
+                EventAPI::listUserEvents($userId);
+            } else {
+                EventAPI::listEvents();
+            }
         } elseif ($method == 'POST') {
             EventAPI::addEvent();
         }

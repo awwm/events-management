@@ -119,7 +119,7 @@ class UserAPI {
             if ($user && password_verify($data->password, $user['password'])) {
                 // Password is correct, generate and return the JWT token
                 http_response_code(200);
-                echo json_encode(array("token" => self::generateToken($user['id'])));
+                echo json_encode(array("token" => self::generateToken($user['id']), "userId" => $user['id']));
             } else {
                 // Password is incorrect or user doesn't exist
                 http_response_code(401);

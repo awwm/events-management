@@ -1,5 +1,16 @@
 <template>
-    <div class="dashboard">
-      <h1>This is an dashboard page</h1>
-    </div>
-  </template>
+  <div class="dashboard">
+    <!-- Other content in the dashboard view -->
+    <EventList />
+  </div>
+</template>
+
+<script>
+import EventList from '@/components/EventList.vue';
+
+export default {
+  components: {
+    EventList
+  }
+};
+</script>

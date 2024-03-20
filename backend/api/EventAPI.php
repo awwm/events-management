@@ -14,6 +14,16 @@ class EventAPI {
         return $events;
     }
 
+    // Method to list all user events
+    public static function listUserEvents($userId) {
+        $db = new Database();
+        $pdo = $db->connect();
+        $stmt = $pdo->prepare('SELECT * FROM events WHERE user_id = ?');
+        $stmt->execute([$userId]);
+        $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $events;
+    }
+
     // Method to add an event
     public static function addEvent($userId, $name, $cityId, $categoryIds, $featuredImage, $shortDescription, $longDescription) {
         $db = new Database();

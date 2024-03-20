@@ -21,7 +21,7 @@ const routes = [
     component: SigninView
   },
   {
-    path: '/dashboard',
+    path: '/dashboard/:userId',
     name: 'Dashboard',
     component: DashboardView,
     meta: { requiresAuth: true } // Add this meta field to require authentication

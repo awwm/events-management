@@ -40,9 +40,10 @@ export default {
                     this.registrationSuccess = true;
                     const data = await response.json();
                     localStorage.setItem('token', data.token);
+                    const userId = data.userId; // Extract user ID from the response
                     // Set isAuthenticated to true in Vuex store
                     this.setAuthenticated(true);
-                    this.$router.push('/dashboard');
+                    this.$router.push({ name: 'dashboard', params: { userId } });
                 } else {
                     // Registration failed
                     console.error('Login failed:', response.statusText);
