@@ -17,17 +17,14 @@ require_once('api/EventAPI.php');
 require_once('api/UserAPI.php');
 
 // Enable CORS (Cross-Origin Resource Sharing)
-// Set Access-Control-Allow-Origin header
-if ($allowedIPs) {
-    header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Credentials: true");
-    header('Access-Control-Allow-Methods: GET, POST'); // Allow GET and POST requests
-    header('Access-Control-Allow-Headers: Content-Type, Authorization'); // Allow Content-Type and Authorization headers
-} else {
-    // Fallback to single origin (e.g., localhost)
-    header("HTTP/1.1 403 Forbidden");
-    exit;
-}
+// Allow requests from any origin
+header("Access-Control-Allow-Origin: *");
+// Allow credentials (cookies, authorization headers, etc.) to be included in requests
+header("Access-Control-Allow-Credentials: true");
+// Allow specific HTTP methods (GET, POST, etc.)
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+// Allow specific headers in the request
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 // // Include necessary files
 // require_once('config/database.php');
@@ -76,6 +73,7 @@ switch ($api) {
     case 'EventAPI':
         if ($method == 'GET') {
             if (isset($_GET['userId'])) {
+                $userId = $_GET['userId'];
                 EventAPI::listUserEvents($userId);
             } else {
                 EventAPI::listEvents();

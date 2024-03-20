@@ -57,7 +57,7 @@ export default createStore({
     },
     async fetchUserEvents({ commit }, userId) {
       try {
-        const response = await fetch(`${BASE_URL}api/EventAPI/${userId}`, {
+        const response = await fetch(`${BASE_URL}api/EventAPI/?userId=${userId}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,

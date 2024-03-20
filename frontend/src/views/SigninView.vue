@@ -11,6 +11,10 @@
                     <!-- Submit button -->
                     <v-btn type="submit" color="primary">Sign In</v-btn>
                 </v-form>
+                <!-- Display error message if an error occurs -->
+                <v-alert v-if="errorMessage" type="error" outlined class="my-4">
+                    {{ errorMessage }}
+                </v-alert>
             </v-col>
         </v-row>
     </v-container>
@@ -23,7 +27,8 @@ export default {
     data() {
         return {
             email: '',
-            password: ''
+            password: '',
+            errorMessage: null // Initialize errorMessage property
         };
     },
     methods: {
@@ -43,7 +48,8 @@ export default {
                     const userId = data.userId; // Extract user ID from the response
                     // Set isAuthenticated to true in Vuex store
                     this.setAuthenticated(true);
-                    this.$router.push({ name: 'dashboard', params: { userId } });
+
+                    await this.$router.push({ name: 'dashboard', params: { userId } });
                 } else {
                     // Registration failed
                     console.error('Login failed:', response.statusText);
@@ -51,6 +57,7 @@ export default {
             } catch (error) {
                 console.error('Error signing in:', error);
                 // Optionally handle sign-in errors
+                this.errorMessage = 'An unexpected error occurred. Please try again later.';
             }
         }
     },

@@ -22,7 +22,7 @@ const routes = [
   },
   {
     path: '/dashboard/:userId',
-    name: 'Dashboard',
+    name: 'dashboard',
     component: DashboardView,
     meta: { requiresAuth: true } // Add this meta field to require authentication
   },
