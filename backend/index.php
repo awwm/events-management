@@ -26,22 +26,6 @@ header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 // Allow specific headers in the request
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// // Include necessary files
-// require_once('config/database.php');
-
-// // Create an instance of the Database class
-// $database = new Database();
-
-// // Attempt to connect to the database
-// $pdo = $database->initSchema();
-
-// // Check if the connection was successful
-// if ($pdo) {
-//     echo "Database tables created";
-// } else {
-//     echo "Database connection failed";
-// }
-
 // Define the base API path
 $basePath = '/api/';
 
@@ -56,6 +40,17 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // Route requests to the appropriate API endpoint and method
 switch ($api) {
+    case 'init-database':
+        // Include necessary files
+        require_once('config/database.php');
+    
+        // Create an instance of the Database class
+        $database = new Database();
+        // Initialize the database schema
+        $database->initSchema();
+        // Respond with a success message
+        echo json_encode(array("message" => "Database initialization successful"));
+        break;
     case 'CityAPI':
         if ($method == 'GET') {
             CityAPI::listCities();

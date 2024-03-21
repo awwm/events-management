@@ -32,6 +32,18 @@ export default {
       this.$store.dispatch('fetchEvents');
     }
   },
+
+  created() {
+    // Dispatch the initializeDatabase action when the component is created
+    this.$store.dispatch('initializeDatabase')
+      .then(() => {
+        console.log('Database initialization successful');
+        // Optionally, you can perform additional actions after database initialization
+      })
+      .catch(error => {
+        console.error('Error initializing database:', error);
+      });
+  },
 };
 </script>
 

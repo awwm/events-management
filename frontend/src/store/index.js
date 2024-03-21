@@ -39,6 +39,20 @@ export default createStore({
   },
 
   actions: {
+    // Iinitialize the database
+    async initializeDatabase() {
+      try {
+        const response = await fetch(BASE_URL + 'api/init-database');
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Database initialization successful', data);
+        } else {
+          console.error('Failed to initialize database:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error initializing database:', error);
+      }
+    },
     async registerUser(_, regData) {
       try {
         const response = await fetch(BASE_URL + 'api/UserAPI/register', {
