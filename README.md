@@ -76,7 +76,7 @@ The Events Management App is designed to facilitate the tracking of event venues
 
 
 7. **Initializing Database:**
-- First view of homepage will initialise database.
+- First view of homepage will initialise database and add some categoires inside categories table.
 
 ## Note
 - Make sure Docker is installed on your system before running the commands.

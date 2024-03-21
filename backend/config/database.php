@@ -72,6 +72,22 @@ class Database {
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )
         ");
+
+            // Insert initial data into the categories table
+        $pdo->query("
+            INSERT INTO categories (name) VALUES
+                ('Music Concerts'),
+                ('Art Exhibitions'),
+                ('Sports Events'),
+                ('Workshops & Seminars'),
+                ('Food Festivals'),
+                ('Comedy Shows'),
+                ('Technology Conferences'),
+                ('Fashion Shows'),
+                ('Charity Events'),
+                ('Film Screenings')
+            ON CONFLICT DO NOTHING
+        ");
     }
 }
 ?>
