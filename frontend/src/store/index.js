@@ -4,6 +4,7 @@ import { BASE_URL } from '../../constants'; // Import the BASE_URL constant
 export default createStore({
   state: {
     events: [],
+    citySuggestions: [],
     isLoggedIn: false,
     isAuthenticated: false,
     formData: {
@@ -23,6 +24,9 @@ export default createStore({
     },
     SET_USER_ID(state, userId) {
       state.userId = userId;
+    },
+    setCitySuggestions(state, cityNames) {
+      state.citySuggestions = cityNames;
     },
     setFormData(state, payload) {
       state.formData = { ...payload };
@@ -152,6 +156,25 @@ export default createStore({
         throw error; // Re-throw the error for further handling if needed
       }
     },
+    async fetchCities({ commit }, query) {
+      const countryCode = 'MT';
+      const username = 'ammpl';
+      const typedQuery = typeof query === 'string' ? query.trim() : query;
+      if (typedQuery.length < 2) return;
+  
+      try {
+        const response = await fetch(`http://api.geonames.org/searchJSON?q=${encodeURIComponent(typedQuery)}&country=${encodeURIComponent(countryCode)}&featureClass=P&maxRows=10&username=${encodeURIComponent(username)}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch cities');
+        }
+        const data = await response.json();
+        const cityNames = data.geonames.map(city => city.name);
+        commit('setCitySuggestions', cityNames); // Update citySuggestions state in Vuex store
+      } catch (error) {
+        console.error('Error fetching cities:', error);
+        // Handle error
+      }
+    },
     setAuthenticated({ commit }, isAuthenticated) {
       commit('SET_AUTHENTICATED', isAuthenticated);
     },
@@ -171,6 +194,6 @@ export default createStore({
     isAuthenticated(state) {
       return state.isAuthenticated;
     },
-    // Other getters as needed
+    citySuggestions: state => state.citySuggestions,
   },
 });
