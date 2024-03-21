@@ -5,6 +5,7 @@ export default createStore({
   state: {
     events: [],
     citySuggestions: [],
+    categoryOptions: [],
     isLoggedIn: false,
     isAuthenticated: false,
     formData: {
@@ -27,6 +28,9 @@ export default createStore({
     },
     setCitySuggestions(state, cityNames) {
       state.citySuggestions = cityNames;
+    },
+    setCategoryOptions(state, categoryOptions) {
+      state.categoryOptions = categoryOptions;
     },
     setFormData(state, payload) {
       state.formData = { ...payload };
@@ -172,6 +176,39 @@ export default createStore({
         commit('setCitySuggestions', cityNames); // Update citySuggestions state in Vuex store
       } catch (error) {
         console.error('Error fetching cities:', error);
+        // Handle error
+      }
+    },
+    async fetchCategoryOptions({ commit }) {
+      try {
+        const response = await fetch(`${BASE_URL}api/CategoryAPI`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch category options');
+        }
+
+        // Check if response body is empty
+        const text = await response.text();
+    
+        const data = JSON.parse(text);
+        console.log(data);
+        if (!data || Object.keys(data).length === 0) {
+          // Handle empty response (e.g., return an empty array)
+          commit('setCategoryOptions', []);
+        } else {
+          // Update categoryOptions state in Vuex store
+          const transformedData = data.map(category => ({
+            id: category.id,
+            name: category.name,
+          }));
+          commit('setCategoryOptions', transformedData);
+        }
+      } catch (error) {
+        console.error('Error fetching category options:', error);
         // Handle error
       }
     },

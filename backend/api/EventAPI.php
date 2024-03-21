@@ -11,7 +11,12 @@ class EventAPI {
         $pdo = $db->connect();
         $stmt = $pdo->query('SELECT * FROM events');
         $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $events;
+        // Encode categories as JSON
+        $jsonevents = json_encode($events);
+
+        header('Content-Type: application/json');
+        echo $jsonevents;
+        exit();
     }
 
     // Method to list all user events
@@ -21,15 +26,20 @@ class EventAPI {
         $stmt = $pdo->prepare('SELECT * FROM events WHERE user_id = ?');
         $stmt->execute([$userId]);
         $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $events;
+        // Encode categories as JSON
+        $jsonevents = json_encode($events);
+
+        header('Content-Type: application/json');
+        echo $jsonevents;
     }
 
     // Method to add an event
     public static function addEvent($userId, $name, $city, $category, $featuredImage, $shortDescription, $longDescription) {
         $db = new Database();
         $pdo = $db->connect();
-        $stmt = $pdo->prepare('INSERT INTO events (user_id, name, city, category_ids, featured_image, short_description, long_description) VALUES (?, ?, ?, ARRAY[CAST(? AS INTEGER)], ?, ?, ?)');
-        $stmt->execute([$userId, $name, $city, $category, $featuredImage, $shortDescription, $longDescription]);
+        $stmt = $pdo->prepare('INSERT INTO events (user_id, name, city, category_ids, featured_image, short_description, long_description) VALUES (?, ?, ?, ?, ?, ?, ?)');
+        $categoryIdsString = '{' . implode(',', $category) . '}';
+        $stmt->execute([$userId, $name, $city, $categoryIdsString, $featuredImage, $shortDescription, $longDescription]);
         return $pdo->lastInsertId();
     }
 

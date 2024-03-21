@@ -3,12 +3,24 @@
 require_once('vendor/autoload.php');
 
 use Dotenv\Dotenv;
+use Predis\Client;
 
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 // Get allowed IPs from .env file
 $allowedIPs = $_ENV['ALLOWED_IPS'];
+
+// Get Redis connection parameters from .env file
+$redisHost = $_ENV['REDIS_HOST'];
+$redisPort = $_ENV['REDIS_PORT'];
+
+// Create a Redis client
+$redis = new Client([
+    'scheme' => 'tcp',
+    'host'   => $redisHost,
+    'port'   => $redisPort,
+]);
 
 // Include necessary files
 require_once('api/CityAPI.php');
@@ -80,7 +92,7 @@ switch ($api) {
             $userId = $data['userId'];
             $name = $data['title'];
             $city = $data['city'];
-            $category = $data['category'];
+            $category = $data['categoryIds'];
             $shortDescription = $data['shortDescription'];
             $longDescription = $data['longDescription'];
             $featuredImage = null;
@@ -109,5 +121,12 @@ switch ($api) {
         echo json_encode(array("message" => "Invalid API endpoint"));
         break;
 }
+
+// Set a value in Redis
+$redis->set('key', 'value');
+
+// Get a value from Redis
+$value = $redis->get('key');
+// echo "Value from Redis: $value";
 
 ?>

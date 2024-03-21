@@ -73,21 +73,27 @@ class Database {
             )
         ");
 
-            // Insert initial data into the categories table
-        $pdo->query("
-            INSERT INTO categories (name) VALUES
-                ('Music Concerts'),
-                ('Art Exhibitions'),
-                ('Sports Events'),
-                ('Workshops & Seminars'),
-                ('Food Festivals'),
-                ('Comedy Shows'),
-                ('Technology Conferences'),
-                ('Fashion Shows'),
-                ('Charity Events'),
-                ('Film Screenings')
-            ON CONFLICT DO NOTHING
-        ");
+        // Check if categories already exist
+        $stmt = $pdo->query('SELECT COUNT(*) FROM categories');
+        $count = $stmt->fetchColumn();
+
+        // Insert initial data into the categories table
+        if ($count == 0) {
+            $pdo->query("
+                INSERT INTO categories (name) VALUES
+                    ('Music Concerts'),
+                    ('Art Exhibitions'),
+                    ('Sports Events'),
+                    ('Workshops & Seminars'),
+                    ('Food Festivals'),
+                    ('Comedy Shows'),
+                    ('Technology Conferences'),
+                    ('Fashion Shows'),
+                    ('Charity Events'),
+                    ('Film Screenings')
+                ON CONFLICT DO NOTHING
+            ");
+        }
     }
 }
 ?>

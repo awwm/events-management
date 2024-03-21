@@ -7,11 +7,27 @@ require_once('UserAPI.php');
 class CategoryAPI {
     // Method to list all categories
     public static function listCategories() {
-        $db = new Database();
-        $pdo = $db->connect();
-        $stmt = $pdo->query('SELECT * FROM categories');
-        $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $categories;
+        try {
+            $db = new Database();
+            $pdo = $db->connect();
+            
+            // Execute SQL query to retrieve categories
+            $stmt = $pdo->query('SELECT * FROM categories');
+            
+            // Fetch categories as associative array
+            $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Encode categories as JSON
+            $jsonCategories = json_encode($categories);
+            
+            header('Content-Type: application/json');
+            echo $jsonCategories;
+            exit();
+        } catch (PDOException $e) {
+            // Handle database connection or query errors
+            error_log('Database error: ' . $e->getMessage());
+            return false; // Return false to indicate error
+        }
     }
 
     // Method to add a category

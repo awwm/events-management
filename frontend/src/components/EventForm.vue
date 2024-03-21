@@ -5,7 +5,7 @@
           <v-col cols="12">
             <v-text-field v-model="localFormData.title" label="Event Title"></v-text-field>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12">
             <v-autocomplete
               v-model="localFormData.city"
               :items="citySuggestions"
@@ -14,9 +14,21 @@
               @input="handleCityInput"
             ></v-autocomplete>
           </v-col>
-          <v-col cols="12" md="6">
-            <v-text-field v-model.number="localFormData.category" label="Category" type="number"></v-text-field>
-          </v-col>
+          <v-col cols="12">
+          <v-subheader>Categories</v-subheader>
+          <v-row>
+            <v-col v-for="category in categoryOptions" :key="category.id" cols="4" class="pa-0">
+              <v-checkbox
+                v-model="localFormData.categoryIds"
+                :label="category.name"
+                :value="category.id"
+                color="primary"
+                dense
+                class="d-inline-flex"
+              ></v-checkbox>
+            </v-col>
+          </v-row>
+        </v-col>
           <v-col cols="12">
             <v-textarea v-model="localFormData.shortDescription" label="Short Description"></v-textarea>
           </v-col>
@@ -44,20 +56,20 @@
         localFormData: {
           title: '',
           city: '',
-          category: '',
+          categoryIds: [],
           shortDescription: '',
           longDescription: '',
         },
       };
     },
     computed: {
-      ...mapState(['citySuggestions', 'loadingCities']), // Include loadingCities in computed properties
+      ...mapState(['citySuggestions', 'loadingCities', 'categoryOptions']), // Include loadingCities in computed properties
       formData() {
         return this.$store.state.formData;
       },
     },
     methods: {
-      ...mapActions(['fetchCities', 'submitForm']),
+      ...mapActions(['fetchCities', 'fetchCategoryOptions', 'submitForm']),
       async submitForm() {
         try {
           // Retrieve userID from Vuex state or wherever it's stored
@@ -76,6 +88,9 @@
     this.fetchCities(value);
   },
     },
+    created() {
+        this.$store.dispatch('fetchCategoryOptions');
+    }
   };
   </script>
   
