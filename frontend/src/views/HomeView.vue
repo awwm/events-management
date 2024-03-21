@@ -1,18 +1,40 @@
 <template>
-  <HelloWorld />
+  <div class="home-view">
+    <HeroSection />
+    <EventList :publicEvents="publicEvents" />
+  </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
+import HeroSection from '../components/HeroSection.vue';
+import EventList from '../components/EventList.vue';
 
-// Components
-import HelloWorld from '../components/HelloWorld.vue';
-
-export default defineComponent({
+export default {
   name: 'HomeView',
 
   components: {
-    HelloWorld,
+    HeroSection,
+    EventList,
   },
-});
+
+  computed: {
+    ...mapGetters(['getEvents']), // All events
+    publicEvents() {
+      return this.getEvents;
+    },
+  },
+
+  mounted() {
+    // Fetch events
+    if (!this.publicEvents.length) {
+      // Only fetch events if they are not already available
+      this.$store.dispatch('fetchEvents');
+    }
+  },
+};
 </script>
+
+<style scoped>
+/* Add your CSS styles for the home view here */
+</style>

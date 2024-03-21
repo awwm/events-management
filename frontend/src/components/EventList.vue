@@ -1,10 +1,15 @@
 <template>
     <div>
         <h2>Event List</h2>
-        <div v-for="event in events" :key="event.id">
-            <!-- Display event details here -->
-            <p>{{ event.name }}</p>
-            <!-- Add more details as needed -->
+        <div v-if="events.length > 0">
+            <div v-for="event in events" :key="event.id">
+                <!-- Display event details here -->
+                <p>{{ event.name }}</p>
+                <!-- Add more details as needed -->
+            </div>
+        </div>
+        <div v-else>
+            <p>No events available</p>
         </div>
     </div>
 </template>
@@ -13,16 +18,29 @@
 import { mapGetters } from 'vuex';
 
 export default {
+    props: {
+        userId: {
+            type: Number, // userId is a number
+            default: null, // Default value to handle the case where userId is not provided
+        },
+        publicPage: {
+            type: Boolean,
+            default: true, // Public page by default
+        },
+    },
     computed: {
         ...mapGetters(['getEvents']),
         events() {
             return this.getEvents; // Retrieve events from Vuex store
         },
     },
-    props: ['userId'],
     mounted() {
         // Fetch events when the component is mounted
-        this.$store.dispatch('fetchUserEvents', this.$route.params.userId);
+        if (this.publicPage) {
+            this.$store.dispatch('fetchEvents');
+        } else if (this.userId !== null) {
+            this.$store.dispatch('fetchUserEvents', this.userId);
+        }
     },
 };
 </script>

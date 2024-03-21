@@ -77,21 +77,38 @@ export default createStore({
         return false;
       }
     },
+    async fetchEvents({ commit }) {
+      try {
+        const response = await fetch(`${BASE_URL}api/EventAPI`, {
+          method: 'GET',
+        });
+        if (response.ok) {
+          const events = await response.json();
+          commit('setEvents', events);
+        } else {
+          console.error('Failed to fetch events:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    },
     async fetchUserEvents({ commit }, userId) {
       try {
+        if (!userId) {
+          console.error('User ID is required to fetch user events');
+          return;
+        }
         const response = await fetch(`${BASE_URL}api/EventAPI/?userId=${userId}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
         });
-        // Handle response and update Vuex state
         if (response.ok) {
           const events = await response.json();
-          // Update events state
           commit('setEvents', events);
         } else {
-          console.error('Failed to fetch events:', response.statusText);
+          console.error('Failed to fetch user events:', response.statusText);
         }
       } catch (error) {
         console.error('Error fetching user events:', error);
