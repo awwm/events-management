@@ -46,7 +46,7 @@ export default {
   },
   mounted() {
     // Fetch user-specific events for the dashboard
-    if (!this.userEvents.length) {
+    if (!this.userEvents || !this.userEvents.length) {
       // Only fetch events if they are not already available in the store
       this.$store.dispatch('fetchUserEvents', this.userId); // Pass the userId if needed
     }
